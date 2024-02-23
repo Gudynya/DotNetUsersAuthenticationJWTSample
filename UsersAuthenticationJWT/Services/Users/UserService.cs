@@ -12,10 +12,12 @@ namespace UsersAuthenticationJWT.Services.Users
         public UserService(IEncryptionService encryptionService) { 
             Users = new ConcurrentDictionary<string, User>();
             
-            this.Users.TryAdd("root", new User()
+            MemoryProjectStorage.Users.TryAdd("root", new User()
             {
+                Id = Guid.NewGuid(),
                 UserName = "root",
-                EncryptedPassword = encryptionService.Encrypt("toor")
+                EncryptedPassword = encryptionService.Encrypt("toor"),
+                Role = "admin"
             });
 
             this.EncryptionService = encryptionService;
@@ -23,13 +25,13 @@ namespace UsersAuthenticationJWT.Services.Users
 
         public User GetUserName(string userName)
         {
-            Users.TryGetValue(userName, out var user);
+            MemoryProjectStorage.Users.TryGetValue(userName, out var user);
             return user;
         }
 
-        public bool CheckUserPassword(string userName, string password)
+        public bool CheckUserPassword(string userName, string password, out User? user)
         {
-            var user = GetUserName(userName);
+            user = this.GetUserName(userName);
             
             if(user == null)
             {
@@ -38,7 +40,13 @@ namespace UsersAuthenticationJWT.Services.Users
 
             var encryptedPassword = this.EncryptionService.Encrypt(password);
 
-            return user.EncryptedPassword == encryptedPassword;
+            if (user.EncryptedPassword != encryptedPassword)
+            {
+                user = null;
+                return false;
+            }
+
+            return true;
         }
     }
 }

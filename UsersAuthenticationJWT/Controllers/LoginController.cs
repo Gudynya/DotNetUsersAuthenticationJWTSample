@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using UsersAuthenticationJWT.Dto;
 using UsersAuthenticationJWT.Services.Users;
@@ -11,13 +13,13 @@ namespace UsersAuthenticationJWT.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly IConfiguration _config;
-        private readonly IUserService _userService;
+        private readonly IConfiguration Configuration;
+        private readonly IUserService UserService;
 
         public LoginController(IConfiguration config, IUserService userService)
         {
-            this._config = config;
-            this._userService = userService;
+            this.Configuration = config;
+            this.UserService = userService;
         }
 
         [HttpPost]
@@ -25,17 +27,24 @@ namespace UsersAuthenticationJWT.Controllers
         {
             //your logic for login process
             //If login usrename and password are correct then proceed to generate token
-            if (!this._userService.CheckUserPassword(loginRequest.UserName, loginRequest.Password))
+            if (!this.UserService.CheckUserPassword(loginRequest.UserName, loginRequest.Password, out var user))
             {
                 return Unauthorized();
             }
 
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
-              _config["Jwt:Issuer"],
-              null,
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Role),
+                // You can add more claims as needed
+            };
+
+            var Sectoken = new JwtSecurityToken(Configuration["Jwt:Issuer"],
+              Configuration["Jwt:Issuer"],
+              claims,
               expires: DateTime.Now.AddMinutes(120),
               signingCredentials: credentials);
 
