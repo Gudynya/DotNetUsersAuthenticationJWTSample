@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Text;
 using UsersAuthenticationJWT.Controllers;
@@ -6,13 +8,11 @@ using UsersAuthenticationJWT.Dto;
 
 namespace UsersAuthenticationJWT.Tests
 {
-    public class TestApiLoginUser : IClassFixture<WebApplicationFactory<Startup>>
+    public class TestApiLoginUser : TestBase
     {
-        private readonly WebApplicationFactory<Startup> Factory;
-
         public TestApiLoginUser(WebApplicationFactory<Startup> factory)
+            : base(factory)
         {
-            this.Factory = factory;
         }
 
         [Fact]

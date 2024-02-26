@@ -5,13 +5,13 @@
         /// <summary>
         /// Convert a secure string to a normal string
         /// </summary>
-        /// <param name="secureStr"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static string ToPlainString(this System.Security.SecureString secureStr)
+        public static string ToPlainString(this System.Security.SecureString value)
         {
             string plainStr = new System.Net.NetworkCredential(
                 string.Empty,
-                secureStr).Password;
+                value).Password;
             return plainStr;
         }
 

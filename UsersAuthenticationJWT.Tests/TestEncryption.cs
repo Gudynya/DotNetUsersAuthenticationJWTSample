@@ -8,15 +8,23 @@ using UsersAuthenticationJWT.Services.Encryption;
 
 namespace UsersAuthenticationJWT.Tests
 {
-    public class TestEncryption : IClassFixture<WebApplicationFactory<Startup>>
+    /// <summary>
+    /// Testing for the encryption service
+    /// </summary>
+    public class TestEncryption : TestBase
     {
-        private readonly WebApplicationFactory<Startup> Factory;
-
-        public TestEncryption(WebApplicationFactory<Startup> factory)
+        /// <summary>
+        /// Ctor.
+        /// </summary>
+        /// <param name="factory"></param>
+        public TestEncryption(WebApplicationFactory<Startup> factory) 
+            : base(factory)
         {
-            this.Factory = factory;
         }
 
+        /// <summary>
+        /// Encrypts and decrypts a simple string using the current WebApplication Encryption Service
+        /// </summary>
         [Fact]
         public async void TestEncryptDecrypt()
         {
