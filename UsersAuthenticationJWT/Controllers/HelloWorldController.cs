@@ -9,7 +9,7 @@ namespace UsersAuthenticationJWT.Controllers
     public class HelloWorldController : ControllerBase
     {
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
             return Ok("Hello World");
         }

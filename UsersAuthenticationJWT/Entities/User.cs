@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace UsersAuthenticationJWT.Services.Users
+namespace UsersAuthenticationJWT.Entities
 {
     /// <summary>
     /// User's DTO
@@ -26,6 +26,6 @@ namespace UsersAuthenticationJWT.Services.Users
         /// <summary>
         /// User roles
         /// </summary>
-        public string Role { get; set; } 
+        public string Role { get; set; }
     }
 }

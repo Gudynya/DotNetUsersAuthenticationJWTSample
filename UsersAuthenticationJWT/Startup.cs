@@ -2,7 +2,10 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using UsersAuthenticationJWT.Jwt;
+using UsersAuthenticationJWT.Services.Authentication;
 using UsersAuthenticationJWT.Services.Encryption;
+using UsersAuthenticationJWT.Services.Storage;
+using UsersAuthenticationJWT.Services.UserAuthentication;
 using UsersAuthenticationJWT.Services.Users;
 
 namespace UsersAuthenticationJWT
@@ -19,8 +22,10 @@ namespace UsersAuthenticationJWT
         public Startup(WebApplicationBuilder builder)
         {
             // Add services to the container.
+            builder.Services.AddSingleton<IStorageService, StorageService>();
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
-            builder.Services.AddSingleton<IUserService, UserService>();
+            builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -73,7 +78,6 @@ namespace UsersAuthenticationJWT
             app.MapControllers();
 
             app.Run();
-
         }
     }
 }
