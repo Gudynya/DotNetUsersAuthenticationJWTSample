@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
@@ -25,6 +26,7 @@ namespace UsersAuthenticationJWT.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Post([FromBody] LoginRequest loginRequest)
         {
             var userAuthenticationResult = await this.UserService.Authenticate(loginRequest.UserName, loginRequest.Password, this.HttpContext.RequestAborted);

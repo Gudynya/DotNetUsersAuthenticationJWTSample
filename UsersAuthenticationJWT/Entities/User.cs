@@ -10,7 +10,7 @@ namespace UsersAuthenticationJWT.Entities
         /// <summary>
         /// Identifier
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// The UserName

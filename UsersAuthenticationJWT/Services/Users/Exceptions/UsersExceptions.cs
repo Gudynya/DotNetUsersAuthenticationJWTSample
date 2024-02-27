@@ -12,4 +12,11 @@
         public UserServiceException(string message) : base(message)
         { }
     }
+
+    public class PaginationExceededException : Exception
+    {
+        public PaginationExceededException(int current, int max) : base($"The max take must be {max}. Current: {current}")
+        { 
+        }
+    }
 }

@@ -19,6 +19,11 @@ namespace UsersAuthenticationJWT.Services.Users
             int take,
             CancellationToken cancellationToken = default)
         {
+            if (take > 200)
+            {
+                throw new PaginationExceededException(take, 200);
+            }
+
             if (predicate == null) 
             {
                 return this.StorageService.GetUsersStorage().Values.OrderBy(x => x.Id).Skip(skip).Take(take).AsEnumerable();
@@ -32,19 +37,19 @@ namespace UsersAuthenticationJWT.Services.Users
                 .AsEnumerable();
         }
 
-        public async Task<User> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<User?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             this.StorageService.GetUsersStorage().TryGetValue(id, out var user);
             return user;
         }
 
-        public async Task<User> AddUserAsync(User user, CancellationToken cancellationToken = default)
+        public async Task<Guid> AddUserAsync(User user, CancellationToken cancellationToken = default)
         {
-            if (user.Id == default)
+            if (user.Id == null || user.Id == default)
             {
                 user.Id = Guid.NewGuid();
-                this.StorageService.GetUsersStorage().TryAdd(user.Id, user);
-                return user;
+                this.StorageService.GetUsersStorage().TryAdd(user.Id.Value, user);
+                return user.Id.Value;
             }
 
             throw new UserServiceException("To add a new user, the Id must be default value");
@@ -53,14 +58,14 @@ namespace UsersAuthenticationJWT.Services.Users
 
         public async Task UpdateUserAsync(User user, CancellationToken cancellationToken = default)
         {
-            if (user.Id == default)
+            if (user.Id == null || user.Id == default)
             {
                 throw new UserServiceException("To update a new user, the Id must not be default value");
             }
             
-            if (this.StorageService.GetUsersStorage().TryGetValue(user.Id, out _))
+            if (this.StorageService.GetUsersStorage().TryGetValue(user.Id.Value, out _))
             {
-                this.StorageService.GetUsersStorage()[user.Id] = user;
+                this.StorageService.GetUsersStorage()[user.Id.Value] = user;
             }
         }
 

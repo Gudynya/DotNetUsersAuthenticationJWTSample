@@ -20,14 +20,14 @@ namespace UsersAuthenticationJWT.Services.Users
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<User> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<User?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Add a new user
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        Task<User> AddUserAsync(User user, CancellationToken cancellationToken = default);
+        Task<Guid> AddUserAsync(User user, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Update a existing user

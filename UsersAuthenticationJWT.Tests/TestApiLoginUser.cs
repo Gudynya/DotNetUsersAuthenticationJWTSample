@@ -1,9 +1,6 @@
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Text;
-using UsersAuthenticationJWT.Controllers;
 using UsersAuthenticationJWT.Dto;
 
 namespace UsersAuthenticationJWT.Tests
@@ -23,6 +20,8 @@ namespace UsersAuthenticationJWT.Tests
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            client.CancelPendingRequests();
+            client.Dispose();
         }
 
         [Fact]
@@ -52,6 +51,9 @@ namespace UsersAuthenticationJWT.Tests
             response = await client.GetAsync($"api/HelloWorld");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            client.CancelPendingRequests();
+            client.Dispose();
         }
     }
 }

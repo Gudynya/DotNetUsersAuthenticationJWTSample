@@ -37,7 +37,7 @@ namespace UsersAuthenticationJWT.Services.Authentication
         {
             var user = await this.GetUserName(userName, cancellationToken);
             
-            if(user == null)
+            if(user == null || user.Id == null || user.Id == default)
             {
                 return null;
             }
@@ -51,7 +51,7 @@ namespace UsersAuthenticationJWT.Services.Authentication
 
             return new UserAuthenticationResult()
             {   
-                Id = user.Id,
+                Id = user.Id.Value,
                 Role = user.Role,
             };
         }
